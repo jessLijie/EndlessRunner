@@ -56,10 +56,12 @@ class preloadGame extends Phaser.Scene{
             frameWidth: 20,
             frameHeight: 20
         });
+
         this.load.audio('theme', ['audio.ogg','audio.mp3']);
         this.load.audio('beep', ['mario_coin.ogg','mario_coin.mp3']);
     }
     create(){
+        
 
         this.anims.create({
             key: "rotate",
@@ -67,13 +69,15 @@ class preloadGame extends Phaser.Scene{
                 start: 0,
                 end: 5
             }),
-            frameRate: 15,
+            frameRate: 20,
             yoyo: true,
             repeat: -1
         });
  
         this.scene.start("PlayGame");
         }
+
+        
 }
 
 class playGame extends Phaser.Scene{
@@ -87,6 +91,7 @@ class playGame extends Phaser.Scene{
     create(){
         var point = this.sound.add('beep');
         var music = this.sound.add('theme');
+        music.loop = true;
         music.play();
         
         this.background = this.add.image(0, 0, "background").setOrigin(0, 0);
@@ -150,7 +155,7 @@ class playGame extends Phaser.Scene{
         //score text
         var scoreText;
 
-        scoreText = this.add.text(16, 16, 'Score: 0', { fontSize: '100px', fill: '#000' });
+        scoreText = this.add.text(16, 16, 'Score: 0', { fontSize: '100px', fill: '#fff' });
 
         // setting collisions between the player and the aura group
         var score = 0;
@@ -189,45 +194,15 @@ class playGame extends Phaser.Scene{
             platform.active = true;
             platform.visible = true;
             this.platformPool.remove(platform);
-            //let newRatio =  platformWidth / platform.displayWidth;
-            //platform.displayWidth = platformWidth;
-            //platform.tileScaleX = 1 / platform.scaleX;
         }
         else{
             platform = this.physics.add.sprite(posX, posY, "platform");
-            //platform = this.add.tileSprite(posX, posY, platformWidth, 32, "platform");
-            //this.physics.add.existing(platform);
             platform.setImmovable(true);
             platform.setVelocityX(Phaser.Math.Between(gameOptions.platformSpeedRange[0], gameOptions.platformSpeedRange[1]) * -1);
             this.platformGroup.add(platform);
         }
         platform.displayWidth = platformWidth;
         this.nextPlatformDistance = Phaser.Math.Between(gameOptions.spawnRange[0], gameOptions.spawnRange[1]); 
-
-        /* the core of the script: platform are added from the pool or created on the fly
-    addPlatform(platformWidth, posX, posY){
-        this.addedPlatforms ++;
-        let platform;
-        if(this.platformPool.getLength()){
-            platform = this.platformPool.getFirst();
-            platform.x = posX;
-            platform.y = posY;
-            platform.active = true;
-            platform.visible = true;
-            this.platformPool.remove(platform);
-            let newRatio =  platformWidth / platform.displayWidth;
-            platform.displayWidth = platformWidth;
-            platform.tileScaleX = 1 / platform.scaleX;
-        }
-        else{
-            platform = this.add.tileSprite(posX, posY, platformWidth, 32, "platform");
-            this.physics.add.existing(platform);
-            platform.body.setImmovable(true);
-            platform.body.setVelocityX(Phaser.Math.Between(gameOptions.platformSpeedRange[0], gameOptions.platformSpeedRange[1]) * -1);
-            this.platformGroup.add(platform);
-        }
-        this.nextPlatformDistance = Phaser.Math.Between(gameOptions.spawnRange[0], gameOptions.spawnRange[1]);*/
-
 
         // is there an aura over the platform?
         if(this.addedPlatforms > 1){
@@ -263,10 +238,9 @@ class playGame extends Phaser.Scene{
         }
     }
     update(){
- 
         // game over
         if(this.player.y > game.config.height){
-            this.scene.start("PlayGame");
+            this.scene.start("PlayGame")
         }
         this.player.x = gameOptions.playerStartPosition;
  
@@ -306,6 +280,7 @@ class playGame extends Phaser.Scene{
     }
 
 };
+
 function resize(){
     let canvas = document.querySelector("canvas");
     let windowWidth = window.innerWidth;
