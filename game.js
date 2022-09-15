@@ -13,7 +13,7 @@ let gameOptions = {
     jumpForce: 400,
     playerStartPosition: 200,
     jumps: 4,
-    auraPercent: 50
+    auraPercent: 75
 }
  
 window.onload = function() {
@@ -156,12 +156,13 @@ class playGame extends Phaser.Scene{
         var score = 0;
 
         this.physics.add.overlap(this.player, this.auraGroup, function(player, aura){
+            aura.disableBody(true, true);
             point.play();
             score += 1;
             scoreText.setText('Score: ' + score);
             this.tweens.add({
                 targets: aura,
-                y: aura.y - 100,
+                y: aura.y - 70,
                 alpha: 0,
                 duration: 800,
                 ease: "Cubic.easeOut",
