@@ -59,6 +59,7 @@ class preloadGame extends Phaser.Scene{
 
         this.load.audio('theme', ['audio.ogg','audio.mp3']);
         this.load.audio('beep', ['mario_coin.ogg','mario_coin.mp3']);
+        this.load.audio('bounce', ['bounce.mp3']);
     }
     create(){
         
@@ -87,10 +88,12 @@ class playGame extends Phaser.Scene{
     }
     preload(){
         this.load.image("background", "images/background.jpg");
+
     }
     create(){
         var point = this.sound.add('beep');
-        var music = this.sound.add('theme');
+        var music = this.sound.add('theme',{volume: 0.2});
+        
         music.loop = true;
         music.play();
         
@@ -181,6 +184,7 @@ class playGame extends Phaser.Scene{
 
         // checking for input
         this.input.on("pointerdown", this.jump, this);
+        
     
     }
  
@@ -229,7 +233,9 @@ class playGame extends Phaser.Scene{
 
     // the player jumps when on the ground, or once in the air as long as there are jumps left and the first jump was on the ground
     jump(){
+        var bounce = this.sound.add('bounce',{ loop: false });
         if(this.player.body.touching.down || (this.playerJumps > 0 && this.playerJumps < gameOptions.jumps)){
+            bounce.play();
             if(this.player.body.touching.down){
                 this.playerJumps = 0;
             }
